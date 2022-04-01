@@ -15,6 +15,11 @@ namespace library
     /*--------------------------------------------------------------------
       TODO: Game::Game definition (remove the comment)
     --------------------------------------------------------------------*/
+	Game::Game(_In_ PCWSTR pszGameName)
+		: m_pszGameName(pszGameName)
+		, m_mainWindow(std::make_unique<library::MainWindow>())
+		, m_renderer(std::make_unique<library::Renderer>())
+	{ }
 
 	/*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
 	  Method:   Game::Initialize
@@ -35,6 +40,24 @@ namespace library
     /*--------------------------------------------------------------------
       TODO: Game::Initialize definition (remove the comment)
     --------------------------------------------------------------------*/
+	HRESULT Game::Initialize(_In_ HINSTANCE hInstance, _In_ INT nCmdShow)
+	{
+		HRESULT hr = S_OK;
+
+		hr = (m_mainWindow->Initialize(hInstance, nCmdShow, m_pszGameName));
+		if (FAILED(hr))
+			return hr;
+
+		HWND m_hWnd;
+
+		m_hWnd = m_mainWindow->GetWindow();
+
+		hr = m_renderer->Initialize(m_hWnd);
+		if (FAILED(hr))
+			return hr;
+
+		return S_OK;
+	}
 
 	/*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
 	  Method:   Game::Run
@@ -47,6 +70,24 @@ namespace library
     /*--------------------------------------------------------------------
       TODO: Game::Run definition (remove the comment)
     --------------------------------------------------------------------*/
+	INT Game::Run()
+	{
+		MSG msg = { 0 };
+		while (WM_QUIT != msg.message)
+		{
+			if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+			{
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
+			}
+			else
+			{
+				m_renderer->Render();
+			}
+		}
+
+		return static_cast<INT>(msg.wParam);
+	}
 
 	/*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
 	  Method:   Game::GetGameName
@@ -59,5 +100,8 @@ namespace library
     /*--------------------------------------------------------------------
       TODO: Game::GetGameName definition (remove the comment)
     --------------------------------------------------------------------*/
-
+	PCWSTR Game::GetGameName() const
+	{
+		return L"Sample window Class";
+	}
 }

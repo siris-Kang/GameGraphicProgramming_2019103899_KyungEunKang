@@ -132,6 +132,12 @@ namespace library
     /*--------------------------------------------------------------------
       TODO: BaseWindow<DerivedType>::BaseWindow definition (remove the comment)
     --------------------------------------------------------------------*/
+    template <class DerivedType>
+    BaseWindow<DerivedType>::BaseWindow()
+        : m_hInstance(nullptr)
+        , m_hWnd(nullptr)
+        , m_pszWindowName(L"Default")
+    { }
 
     /*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
         Method:   BaseWindow<DerivedType>::GetWindow()
@@ -144,6 +150,11 @@ namespace library
     /*--------------------------------------------------------------------
       TODO: BaseWindow<DerivedType>::GetWindow definition (remove the comment)
     --------------------------------------------------------------------*/
+    template <class DerivedType>
+    HWND BaseWindow<DerivedType>::GetWindow() const
+    {
+        return m_hWnd;
+    }
 
     /*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
       Method:   BaseWindow<DerivedType>::initialize
@@ -182,4 +193,42 @@ namespace library
     /*--------------------------------------------------------------------
       TODO: BaseWindow<DerivedType>::initialize definition (remove the comment)
     --------------------------------------------------------------------*/
+    template <class DerivedType>
+    HRESULT BaseWindow<DerivedType>::initialize(_In_ HINSTANCE hInstance,
+        _In_ INT nCmdShow,
+        _In_ PCWSTR pszWindowName,
+        _In_ DWORD dwStyle,
+        _In_opt_ INT x,
+        _In_opt_ INT y,
+        _In_opt_ INT nWidth,
+        _In_opt_ INT nHeight,
+        _In_opt_ HWND hWndParent,
+        _In_opt_ HMENU hMenu)
+    {
+        WNDCLASSEX wcex;
+        wcex.cbSize = sizeof(WNDCLASSEX);
+        wcex.style = CS_HREDRAW | CS_VREDRAW;
+        wcex.lpfnWndProc = DerivedType::WindowProc;
+        wcex.cbClsExtra = 0;
+        wcex.cbWndExtra = 0;
+        wcex.hInstance = hInstance;
+        //wcex.hIcon = LoadIcon(hInstance, (LPCTSTR)IDI_TUTORIAL1);
+        wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
+        wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+        wcex.lpszMenuName = nullptr;
+        wcex.lpszClassName = GetWindowClassName();
+        //wcex.hIconSm = LoadIcon(wcex.hInstance, (LPCTSTR)IDI_TUTORIAL1);
+        if (!RegisterClassEx(&wcex))
+            return E_FAIL;
+
+        m_hInstance = hInstance;
+        m_hWnd = CreateWindow(GetWindowClassName(), pszWindowName, dwStyle, x, y, nWidth, nHeight, hWndParent, hMenu, hInstance, this);
+        if (!m_hWnd)
+            return E_FAIL;
+
+        ShowWindow(m_hWnd, nCmdShow);
+
+        return S_OK;
+    }
+
 }
