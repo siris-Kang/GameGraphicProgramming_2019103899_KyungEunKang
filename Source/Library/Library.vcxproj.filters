@@ -31,6 +31,9 @@
     <Filter Include="헤더 파일\Game">
       <UniqueIdentifier>{7812622d-2180-44dc-b6ba-d5e9a6bb3e71}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\Shaders">
+      <UniqueIdentifier>{c6c7f99d-25a8-4268-9c2f-3fa688975a9c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h">
@@ -67,5 +70,18 @@
     <ResourceCompile Include="Resource.rc">
       <Filter>헤더 파일</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\Lab03.fxh">
+      <Filter>헤더 파일\Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shaders\Lab03_PS.hlsl">
+      <Filter>헤더 파일\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Lab03_VS.hlsl">
+      <Filter>헤더 파일\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
