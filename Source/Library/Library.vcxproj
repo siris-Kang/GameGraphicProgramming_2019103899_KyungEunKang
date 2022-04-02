@@ -23,6 +23,9 @@
     <ClCompile Include="Renderer\Renderer.cpp" />
     <ClCompile Include="Window\MainWindow.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
