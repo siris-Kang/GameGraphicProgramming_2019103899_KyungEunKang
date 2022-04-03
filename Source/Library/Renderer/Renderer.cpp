@@ -190,7 +190,7 @@ namespace library
         m_immediateContext->RSSetViewports(1, &vp);
 
 
-        ID3DBlob* pVSBlob = nullptr;
+        ComPtr<ID3DBlob> pVSBlob = nullptr;
         hr = compileShaderFromFile(
             L"../Library/Shaders/Lab03.fxh",
             "VS",
@@ -202,7 +202,7 @@ namespace library
             return hr;
         }
 
-        ID3DBlob* pPSBlob = nullptr;
+        ComPtr<ID3DBlob> pPSBlob = nullptr;
         hr = compileShaderFromFile(
             L"../Library/Shaders/Lab03.fxh",
             "PS",
@@ -223,7 +223,6 @@ namespace library
 
         // Create the input layout
         hr = m_d3dDevice->CreateInputLayout(layout, numElements, pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), &m_vertexLayout);
-        pVSBlob->Release();
         if (FAILED(hr))
             return hr;
 
@@ -233,7 +232,6 @@ namespace library
 
         // Create the pixel shader
         hr = m_d3dDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), NULL, &m_pixelShader);
-        pPSBlob->Release();
         if (FAILED(hr))
             return hr;
 
@@ -257,7 +255,7 @@ namespace library
 
         ZeroMemory(&InitData, sizeof(InitData));
         InitData.pSysMem = vertices;
-        hr = m_d3dDevice->CreateBuffer(&bd, &InitData, &m_vertexBuffer);
+        hr = m_d3dDevice->CreateBuffer(&bd, &InitData, m_vertexBuffer.GetAddressOf());
 
         if (FAILED(hr))
             return hr;
@@ -265,7 +263,7 @@ namespace library
         // Set the Vertex Buffer
         UINT stride = sizeof(SimpleVertex);
         UINT offset = 0;
-        m_immediateContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
+        m_immediateContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
 
         // Set Primitive topology
         m_immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -330,14 +328,12 @@ namespace library
         if (!pszFileName || !pszEntryPoint || !szShaderModel || !ppBlobOut)
             return E_INVALIDARG;
 
-        *ppBlobOut = nullptr;
-
         UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
 #if defined( DEBUG ) || defined( _DEBUG )
         flags |= D3DCOMPILE_DEBUG;
 #endif
 
-        ID3DBlob* errorBlob = nullptr;
+        ComPtr<ID3DBlob> errorBlob = nullptr;
         hr = D3DCompileFromFile(pszFileName, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, pszEntryPoint, szShaderModel, flags, 0, ppBlobOut, &errorBlob);
 
         if (FAILED(hr))
@@ -345,12 +341,9 @@ namespace library
             if (errorBlob)
             {
                 OutputDebugStringA((char*)errorBlob->GetBufferPointer());
-                errorBlob->Release();
             }
-
             return hr;
         }
-
         return hr;
     }
 }
