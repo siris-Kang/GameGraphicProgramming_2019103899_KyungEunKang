@@ -202,18 +202,12 @@ namespace library
             return hr;
         }
 
-        ComPtr<ID3DBlob> pPSBlob = nullptr;
-        hr = compileShaderFromFile(
-            L"../Library/Shaders/Lab03.fxh",
-            "PS",
-            "ps_5_0",
-            &pPSBlob
-        );
+        // Create the vertex shader
+        hr = m_d3dDevice->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), NULL, &m_vertexShader);
         if (FAILED(hr))
-        {
             return hr;
-        }
 
+        
         // Define the input layout
         D3D11_INPUT_ELEMENT_DESC layout[] =
         {
@@ -225,10 +219,21 @@ namespace library
         hr = m_d3dDevice->CreateInputLayout(layout, numElements, pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), &m_vertexLayout);
         if (FAILED(hr))
             return hr;
-
         // Set the Input layout
         m_immediateContext->IASetInputLayout(m_vertexLayout.Get());
 
+
+        ComPtr<ID3DBlob> pPSBlob = nullptr;
+        hr = compileShaderFromFile(
+            L"../Library/Shaders/Lab03.fxh",
+            "PS",
+            "ps_5_0",
+            &pPSBlob
+        );
+        if (FAILED(hr))
+        {
+            return hr;
+        }
 
         // Create the pixel shader
         hr = m_d3dDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), NULL, &m_pixelShader);
@@ -255,8 +260,9 @@ namespace library
 
         ZeroMemory(&InitData, sizeof(InitData));
         InitData.pSysMem = vertices;
-        hr = m_d3dDevice->CreateBuffer(&bd, &InitData, m_vertexBuffer.GetAddressOf());
 
+
+        hr = m_d3dDevice->CreateBuffer(&bd, &InitData, m_vertexBuffer.GetAddressOf());
         if (FAILED(hr))
             return hr;
 

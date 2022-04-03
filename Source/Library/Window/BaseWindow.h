@@ -102,6 +102,10 @@ namespace library
     {
         DerivedType* pThis = nullptr;
 
+        WCHAR szMsg[64];
+        swprintf_s(szMsg, L"message: %u\n", uMsg);
+        OutputDebugString(szMsg);
+
         if (uMsg == WM_NCCREATE)
         {
             CREATESTRUCT* pCreate = reinterpret_cast<CREATESTRUCT*>(lParam);

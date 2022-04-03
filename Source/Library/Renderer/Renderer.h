@@ -17,8 +17,6 @@
 
 #include "Window/MainWindow.h"
 
-#pragma comment(lib, "d3dcompiler.lib")
-#include <D3Dcompiler.h>
 
 namespace library
 {
