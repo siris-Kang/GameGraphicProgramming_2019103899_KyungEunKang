@@ -21,13 +21,12 @@ namespace library
     /*--------------------------------------------------------------------
       TODO: MainWindow::Initialize definition (remove the comment)
     --------------------------------------------------------------------*/
-    HRESULT MainWindow::Initialize(HINSTANCE hInstance, INT nCmdShow, PCWSTR pszWindowName)
+    HRESULT MainWindow::Initialize(_In_ HINSTANCE hInstance, _In_ INT nCmdShow, _In_ PCWSTR pszWindowName)
     {
         RECT rc = { 0, 0, 800, 600 };
         AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
-        HRESULT hr = initialize(hInstance, nCmdShow, pszWindowName,
-            WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
-            CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr);
+
+        HRESULT hr = initialize(hInstance, nCmdShow, pszWindowName, WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr);
         if (FAILED(hr))
         {
             return hr;
@@ -47,7 +46,6 @@ namespace library
     /*--------------------------------------------------------------------
       TODO: MainWindow::GetWindowClassName definition (remove the comment)
     --------------------------------------------------------------------*/
-
     PCWSTR MainWindow::GetWindowClassName() const
     {
         return L"Sample window Class";
@@ -71,7 +69,7 @@ namespace library
     /*--------------------------------------------------------------------
       TODO: MainWindow::HandleMessage definition (remove the comment)
     --------------------------------------------------------------------*/
-    LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    LRESULT MainWindow::HandleMessage(_In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam)
     {
         PAINTSTRUCT ps;
         HDC hdc;

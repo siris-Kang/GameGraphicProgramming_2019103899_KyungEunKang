@@ -97,19 +97,16 @@ namespace library
     /*--------------------------------------------------------------------
       TODO: BaseWindow<DerivedType>::WindowProc definition (remove the comment)
     --------------------------------------------------------------------*/
-    template <class DerivedType>
-    LRESULT BaseWindow<DerivedType>::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+    template<class DerivedType>
+
+    LRESULT BaseWindow<DerivedType>::WindowProc(_In_ HWND hWnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam)
     {
         DerivedType* pThis = nullptr;
 
-        WCHAR szMsg[64];
-        swprintf_s(szMsg, L"message: %u\n", uMsg);
-        OutputDebugString(szMsg);
-
         if (uMsg == WM_NCCREATE)
         {
-            CREATESTRUCT* pCreate = reinterpret_cast<CREATESTRUCT*>(lParam);
-            pThis = reinterpret_cast<DerivedType*>(pCreate->lpCreateParams);
+            CREATESTRUCT* pCreate = reinterpret_cast<CREATESTRUCT*> (lParam);
+            pThis = reinterpret_cast<DerivedType*> (pCreate->lpCreateParams);
             SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pThis));
             pThis->m_hWnd = hWnd;
         }
@@ -122,8 +119,10 @@ namespace library
         {
             return pThis->HandleMessage(uMsg, wParam, lParam);
         }
-
-        return DefWindowProc(hWnd, uMsg, wParam, lParam);
+        else
+        {
+            return DefWindowProc(hWnd, uMsg, wParam, lParam);
+        }
     }
 
     /*M+M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M+++M
@@ -234,5 +233,4 @@ namespace library
 
         return S_OK;
     }
-
 }
